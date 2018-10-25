@@ -1,0 +1,72 @@
+Automating docker Test Infrastructure as Code
+
+Docker provides and facilitates IaC and kubernetes caters to all its configuration management requirements.
+Testing a containerized product solutions with dockerfile, packer and kubernetes is much simpler.
+
+Enforcing bare-metal servers, VMs orchestration and configuration management methodologies and tools are receipes for failure.
+
+
+Product specific test Tools
+
+There are 2 broad classes of test setups, (1)servers & virtulized and (2) Containerized.
+Your choice of tools matter, specific to the environment or test infrastructure being automated.
+
+For docker/container based test setups, using docker ecosystems tools make most sense.
+This excludes most known confugration tools like Chef, puppet, Ansible etc.
+Using dockerfile application provisioning and kubernetes orchestration for application configuration management are the best choices.
+
+This also mitigates the learning curve involved with tools outside the product domain being tested.
+Keeping the test stack as close to the product's, ensures better testing coverage and understanding.
+
+
+Test container orchestration
+
+Testing microservices application requires setting up test containers. 
+Terraform can be useful in spawning test containers and managing load on them. 
+
+Terraform docker provider uses Docker API to interact with containers and images.
+Thus, the below example will work on any Docker-API compatible hosts/Servers.
+
+
+Terraform Docker Provider
+
+Create a resource provider of the type "docker" on the docker host, localhost. Docker proviers exposes resources such as
+docker container, image, network and volume. The docker provider can be associated with registry, docker configs or certificate files.
+
+Below is an example of setting up docker provider with terraform:
+
+Docker image resource
+
+Create a resource type of docker_image with a tag/name. Access it as var ${docker_image.name.latest}
+Docker image resource is used by the docker container. One can define useful optional parameters like pull_triggers,
+to pull latest images always. 
+
+
+Docker container resource
+
+Create a resource type of docker container and define/describe resources for the container. Docker image, volume and network resources
+defined are used to create the container.
+
+
+Terraform Docker network
+
+Creates a new Docker network. Access network resource as ${docker_network.private_network.name}
+Othe docker network optional parameters can be defined as driver, sunbet, dns, ip-range etc.
+
+Terraform Docker volume
+
+Docker volumes provide data persistence. Test framework need copies of logs for analysis and reporting.
+This hepls in pulling, pushing and sharing data between containers and also hosts.
+
+
+Why use Terraform then ?
+
+Application under test(AUT/SUT) can be deployed by dockerfile/compose, and managed by k8s, which is glued together by development team.
+The test team still needs to orchestrate the test bed to deploy AUT/SUT on. This presents the problem of test bed provisioning or setup.
+
+For IaC, this is the orchestration problem and terraform is a good choice for the same.
+Having a bunch of setup shell scripts, or using pyvmomi, vsphere APIs and/or it takes minutes to setup your test bed, dont use terraform.
+If the maintenence and usuability of your current test bed tools, is a nightmare, consolidating it with terraform is an effort worth taking.
+
+We will continue terraform blogs from test bed setup prespectives and expand it for cloud providers like aws. 
+Contact us to automate your docker test bed orchestration with terraform.
